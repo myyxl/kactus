@@ -1,3 +1,3 @@
 
-rootProject.name = "KotlinMinecraftServer"
+rootProject.name = "Kactus"
 

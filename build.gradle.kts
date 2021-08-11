@@ -5,7 +5,7 @@ plugins {
     application
 }
 
-group = "me.marlon"
+group = "net.kactus"
 version = "1.0-SNAPSHOT"
 
 repositories {
