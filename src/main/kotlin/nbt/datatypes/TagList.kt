@@ -2,8 +2,8 @@ package nbt.datatypes
 
 import nbt.stream.NBTOutputStream
 
-class TagList<T>(
-    private val tagName: String,
+class TagList<T: Tag>(
+    tagName: String,
     private val tagValue: ArrayList<T>,
     override val typeId: Int = 9
 ) : Tag(typeId, tagName, tagValue) {
@@ -13,12 +13,12 @@ class TagList<T>(
     override fun serialize(): ByteArray {
         val serializedList = NBTOutputStream().apply {
             tagValue.forEach {
-                write((it as Tag).serialize())
+                write(it.serialize())
             }
         }.toByteArray()
         return NBTOutputStream().apply {
             writeTagInfo(this@TagList)
-            writeTypeId(0)  //TODO Type id of list elements
+            if(tagValue.size == 0) writeTypeId(TagEnd().typeId) else writeTypeId(tagValue[0].typeId)
             writeInt(serializedList.size)
             write(serializedList)
         }.toByteArray()
