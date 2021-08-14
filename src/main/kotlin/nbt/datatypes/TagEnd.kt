@@ -11,7 +11,7 @@ class TagEnd() : Tag(0, "", 0) {
         }.toByteArray()
     }
 
-    override fun deserialize(stream: NBTInputStream): Tag {
+    override fun deserialize(stream: NBTInputStream, invoker: Tag): Tag {
         return TagEnd()
     }
 

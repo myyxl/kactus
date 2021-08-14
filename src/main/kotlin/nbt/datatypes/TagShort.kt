@@ -18,8 +18,9 @@ class TagShort(
         }.toByteArray()
     }
 
-    override fun deserialize(stream: NBTInputStream): Tag {
-        val tagName = stream.readTagName()
+    override fun deserialize(stream: NBTInputStream, invoker: Tag): Tag {
+        var tagName = ""
+        if(invoker.typeId != TagList<Tag>().typeId) tagName = stream.readTagName()
         val tagValue = stream.readShort()
         return TagShort(tagName, tagValue)
     }

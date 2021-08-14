@@ -21,8 +21,9 @@ class TagIntArray(
         }.toByteArray()
     }
 
-    override fun deserialize(stream: NBTInputStream): Tag {
-        val tagName = stream.readTagName()
+    override fun deserialize(stream: NBTInputStream, invoker: Tag): Tag {
+        var tagName = ""
+        if(invoker.typeId != TagList<Tag>().typeId) tagName = stream.readTagName()
         val size = stream.readInt()
         val intArray = IntArray(size)
         for(i in 0..size) {

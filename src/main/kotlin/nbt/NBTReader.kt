@@ -2,6 +2,7 @@ package nbt
 
 import nbt.datatypes.Tag
 import nbt.datatypes.TagCompound
+import nbt.datatypes.TagEnd
 import nbt.stream.NBTInputStream
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -16,7 +17,7 @@ class NBTReader {
     fun deserialize(bytes: ByteArray): Tag {
         val stream = NBTInputStream(ByteArrayInputStream(bytes))
         val typeId = stream.readTypeId()
-        val tag = Tag.getTagById(typeId).deserialize(stream)
+        val tag = Tag.getTagById(typeId).deserialize(stream, TagEnd())
         stream.close()
         return tag
     }

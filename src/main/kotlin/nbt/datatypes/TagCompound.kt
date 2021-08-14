@@ -22,13 +22,15 @@ class TagCompound(
         }.toByteArray()
     }
 
-    override fun deserialize(stream: NBTInputStream): Tag {
-        val tagName = stream.readTagName()
+    override fun deserialize(stream: NBTInputStream, invoker: Tag): Tag {
+        var tagName = ""
+        if(invoker.typeId != TagList<Tag>().typeId) tagName = stream.readTagName()
         val compoundTag = TagCompound(tagName)
-        var currentId = -1
-        while(currentId != 0) {
+        var currentId = 1
+        while(currentId > 0) {
             currentId = stream.readTypeId()
-            val newTag = getTagById(currentId).deserialize(stream)
+            println("Current Id: $currentId")
+            val newTag = getTagById(currentId).deserialize(stream, this)
             compoundTag.addTag(newTag)
         }
         return compoundTag

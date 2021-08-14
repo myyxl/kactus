@@ -7,7 +7,7 @@ abstract class Tag(
     val name: String,
     val value: Any) {
     abstract fun serialize(): ByteArray
-    abstract fun deserialize(stream: NBTInputStream): Tag
+    abstract fun deserialize(stream: NBTInputStream, invoker: Tag): Tag
 
     companion object {
         private val tagList = listOf<Tag>(
