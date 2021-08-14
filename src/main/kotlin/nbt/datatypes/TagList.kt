@@ -1,5 +1,6 @@
 package nbt.datatypes
 
+import nbt.stream.NBTInputStream
 import nbt.stream.NBTOutputStream
 
 class TagList<T: Tag>(
@@ -9,6 +10,7 @@ class TagList<T: Tag>(
 ) : Tag(typeId, tagName, tagValue) {
 
     constructor(tagName: String): this(tagName, ArrayList<T>())
+    constructor(): this("", ArrayList())
 
     override fun serialize(): ByteArray {
         val serializedList = NBTOutputStream().apply {
@@ -22,6 +24,18 @@ class TagList<T: Tag>(
             writeInt(serializedList.size)
             write(serializedList)
         }.toByteArray()
+    }
+
+    override fun deserialize(stream: NBTInputStream): Tag {
+        val tagName = stream.readTagName()
+        val listType = getTagById(stream.readTypeId())
+        val tagList = TagList<Tag>(tagName)
+        val size = stream.readInt()
+        for(i in 0..size) {
+            val newTag = listType.deserialize(stream)
+            tagList.addTag(newTag)
+        }
+        return tagList
     }
 
     fun addTag(tag: T) {

@@ -1,5 +1,6 @@
 package nbt.datatypes
 
+import nbt.stream.NBTInputStream
 import nbt.stream.NBTOutputStream
 
 class TagLongArray(
@@ -7,6 +8,8 @@ class TagLongArray(
     private val tagValue: LongArray,
     override val typeId: Int = 12
 ) : Tag(typeId, tagName, tagValue) {
+
+    constructor(): this("", LongArray(0))
 
     override fun serialize(): ByteArray {
         return NBTOutputStream().apply {
@@ -16,6 +19,16 @@ class TagLongArray(
                 writeLong(it)
             }
         }.toByteArray()
+    }
+
+    override fun deserialize(stream: NBTInputStream): Tag {
+        val tagName = stream.readTagName()
+        val size = stream.readInt()
+        val longArray = LongArray(size)
+        for(i in 0..size) {
+            longArray[i] = stream.readLong()
+        }
+        return TagLongArray(tagName, longArray)
     }
 
 }

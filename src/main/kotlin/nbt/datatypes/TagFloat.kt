@@ -1,5 +1,6 @@
 package nbt.datatypes
 
+import nbt.stream.NBTInputStream
 import nbt.stream.NBTOutputStream
 
 class TagFloat(
@@ -8,10 +9,18 @@ class TagFloat(
     override val typeId: Int = 5
 ) : Tag(typeId, tagName, tagValue) {
 
+    constructor(): this("", 0f)
+
     override fun serialize(): ByteArray {
         return NBTOutputStream().apply {
             writeTagInfo(this@TagFloat)
             writeFloat(tagValue)
         }.toByteArray()
+    }
+
+    override fun deserialize(stream: NBTInputStream): Tag {
+        val tagName = stream.readTagName()
+        val tagValue = stream.readFloat()
+        return TagFloat(tagName, tagValue)
     }
 }

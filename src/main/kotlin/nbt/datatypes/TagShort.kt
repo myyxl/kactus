@@ -9,6 +9,8 @@ class TagShort(
     override val typeId: Int = 2
 ) : Tag(typeId, tagName, tagValue) {
 
+    constructor(): this("", 0)
+
     override fun serialize(): ByteArray {
         return NBTOutputStream().apply {
             writeTagInfo(this@TagShort)

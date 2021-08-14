@@ -1,5 +1,6 @@
 package nbt.datatypes
 
+import nbt.stream.NBTInputStream
 import nbt.stream.NBTOutputStream
 
 class TagEnd() : Tag(0, "", 0) {
@@ -8,6 +9,10 @@ class TagEnd() : Tag(0, "", 0) {
         return NBTOutputStream().apply {
             writeTagInfo(this@TagEnd)
         }.toByteArray()
+    }
+
+    override fun deserialize(stream: NBTInputStream): Tag {
+        return TagEnd()
     }
 
 }

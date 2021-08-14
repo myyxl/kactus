@@ -1,14 +1,16 @@
 package nbt.datatypes
 
+import nbt.stream.NBTInputStream
 import nbt.stream.NBTOutputStream
 
 class TagCompound(
-    private val tagName: String,
+    tagName: String,
     private val tagValue: ArrayList<Tag>,
     override val typeId: Int = 10
 ) : Tag(typeId, tagName, tagValue) {
 
     constructor(tagName: String): this(tagName, ArrayList<Tag>())
+    constructor(): this("", ArrayList())
 
     override fun serialize(): ByteArray {
         return NBTOutputStream().apply {
@@ -18,6 +20,18 @@ class TagCompound(
             }
             writeTagInfo(TagEnd())
         }.toByteArray()
+    }
+
+    override fun deserialize(stream: NBTInputStream): Tag {
+        val tagName = stream.readTagName()
+        val compoundTag = TagCompound(tagName)
+        var currentId = -1
+        while(currentId != 0) {
+            currentId = stream.readTypeId()
+            val newTag = getTagById(currentId).deserialize(stream)
+            compoundTag.addTag(newTag)
+        }
+        return compoundTag
     }
 
     fun addTag(tag: Tag) {
