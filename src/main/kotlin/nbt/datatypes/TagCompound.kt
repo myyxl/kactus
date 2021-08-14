@@ -29,7 +29,6 @@ class TagCompound(
         var currentId = 1
         while(currentId > 0) {
             currentId = stream.readTypeId()
-            println("Current Id: $currentId")
             val newTag = getTagById(currentId).deserialize(stream, this)
             compoundTag.addTag(newTag)
         }
