@@ -48,4 +48,6 @@ class TagCompound(
         } ?: TagEnd()
     }
 
+    fun getTags() = tagValue
+
 }
