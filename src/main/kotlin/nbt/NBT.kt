@@ -13,6 +13,8 @@ import java.util.zip.GZIPOutputStream
 
 class NBT(private val compressionMethod: NBTCompression) {
 
+    constructor(): this(NBTCompression.NONE)
+
     fun writeToFile(fileName: String, tagCompound: TagCompound) {
         val dataBytes = NBTOutputStream().apply {
             writeTagInfo(tagCompound)
@@ -58,6 +60,13 @@ class NBT(private val compressionMethod: NBTCompression) {
         stream.close()
         tag.name = tagName
         return tag
+    }
+
+    fun serialize(tag: Tag): ByteArray {
+        return NBTOutputStream().apply {
+            writeTagInfo(tag)
+            write(tag.serialize())
+        }.toByteArray()
     }
 
     fun dump(tag: Tag, level: Int = -1) {
