@@ -1,5 +1,5 @@
 # Kactus
-A minecraft server written in Kotlin
+A minecraft server written in Kotlin.
 
 The current version is 1.17.1
 
