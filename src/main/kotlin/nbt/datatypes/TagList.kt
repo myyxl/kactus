@@ -20,7 +20,7 @@ class TagList<T: Tag>(
         }.toByteArray()
         return NBTOutputStream().apply {
             if(tagValue.size == 0) writeTypeId(TagEnd().typeId) else writeTypeId(tagValue[0].typeId)
-            writeInt(serializedList.size)
+            writeInt(tagValue.size)
             write(serializedList)
         }.toByteArray()
     }

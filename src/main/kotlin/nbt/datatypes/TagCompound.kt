@@ -19,7 +19,7 @@ class TagCompound(
                 writeTagInfo(it)
                 write(it.serialize())
             }
-            writeTagInfo(TagEnd())
+            write(TagEnd().serialize())
         }.toByteArray()
     }
 

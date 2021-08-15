@@ -3,17 +3,16 @@ package nbt
 import nbt.datatypes.TagCompound
 import nbt.stream.NBTOutputStream
 import java.io.File
+import java.util.*
 
 class NBTWriter {
 
     fun writeFile(fileName: String, tagCompound: TagCompound) {
-        val tagInfo = NBTOutputStream().apply {
+        val dataBytes = NBTOutputStream().apply {
             writeTagInfo(tagCompound)
+            write(tagCompound.serialize())
         }.toByteArray()
         val outFile = File(fileName)
-        outFile.apply {
-            writeBytes(tagInfo)
-            writeBytes(tagCompound.serialize())
-        }
+        outFile.writeBytes(dataBytes)
     }
 }
