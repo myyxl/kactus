@@ -21,7 +21,7 @@ class TagByteArray(
     override fun deserialize(stream: NBTInputStream): Tag {
         val size = stream.readInt()
         val byteArray = ByteArray(size)
-        for(i in 0..size) {
+        for(i in 0 until size) {
             byteArray[i] = stream.readByte()
         }
         return TagByteArray("", byteArray)

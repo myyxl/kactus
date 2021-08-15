@@ -23,7 +23,7 @@ class TagIntArray(
     override fun deserialize(stream: NBTInputStream): Tag {
         val size = stream.readInt()
         val intArray = IntArray(size)
-        for(i in 0..size) {
+        for(i in 0 until size) {
             intArray[i] = stream.readInt()
         }
         return TagIntArray("", intArray)

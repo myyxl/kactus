@@ -23,7 +23,7 @@ class TagLongArray(
     override fun deserialize(stream: NBTInputStream): Tag {
         val size = stream.readInt()
         val longArray = LongArray(size)
-        for(i in 0..size) {
+        for(i in 0 until size) {
             longArray[i] = stream.readLong()
         }
         return TagLongArray("", longArray)
