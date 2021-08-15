@@ -29,7 +29,7 @@ class TagList<T: Tag>(
         val listType = getTagById(stream.readTypeId())
         val tagList = TagList<Tag>("")
         val size = stream.readInt()
-        for(i in 0..size) {
+        for(i in 1..size) {
             val newTag = listType.deserialize(stream)
             tagList.addTag(newTag)
         }

@@ -17,8 +17,10 @@ class NBTReader {
     fun deserialize(bytes: ByteArray): Tag {
         val stream = NBTInputStream(ByteArrayInputStream(bytes))
         val typeId = stream.readTypeId()
-        val tag = Tag.getTagById(typeId).deserialize(stream, TagEnd())
+        val tagName = stream.readTagName()
+        val tag = Tag.getTagById(typeId).deserialize(stream)
         stream.close()
+        tag.name = tagName
         return tag
     }
 }

@@ -2,6 +2,7 @@ package nbt.datatypes
 
 import nbt.stream.NBTInputStream
 import nbt.stream.NBTOutputStream
+import java.io.EOFException
 
 class TagCompound(
     tagName: String,
@@ -24,14 +25,16 @@ class TagCompound(
 
     override fun deserialize(stream: NBTInputStream): Tag {
         val compoundTag = TagCompound("")
-        var currentId = 1
-        while(currentId > 0) {
-            currentId = stream.readTypeId()
-            val tagName = stream.readTagName()
-            val newTag = getTagById(currentId).deserialize(stream)
-            newTag.name = tagName
-            compoundTag.addTag(newTag)
-        }
+        try {
+            var currentId = stream.readTypeId()
+            while(currentId > 0) {
+                val tagName = stream.readTagName()
+                val newTag = getTagById(currentId).deserialize(stream)
+                newTag.name = tagName
+                compoundTag.addTag(newTag)
+                currentId = stream.readTypeId()
+            }
+        } catch (e: EOFException) {}
         return compoundTag
     }
 
