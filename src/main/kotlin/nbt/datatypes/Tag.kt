@@ -10,7 +10,7 @@ abstract class Tag(
     abstract fun deserialize(stream: NBTInputStream): Tag
 
     companion object {
-        private val tagList = listOf<Tag>(
+        private val tagList = listOf(
             TagEnd(),
             TagByte(),
             TagShort(),

@@ -2,7 +2,7 @@ package nbt.datatypes
 
 import nbt.stream.NBTInputStream
 
-class TagEnd() : Tag(0, "", 0) {
+class TagEnd : Tag(0, "", 0) {
 
     override fun serialize(): ByteArray {
         return ByteArray(0)
