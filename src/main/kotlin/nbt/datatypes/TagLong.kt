@@ -13,15 +13,12 @@ class TagLong(
 
     override fun serialize(): ByteArray {
         return NBTOutputStream().apply {
-            writeTagInfo(this@TagLong)
             writeLong(tagValue)
         }.toByteArray()
     }
 
-    override fun deserialize(stream: NBTInputStream, invoker: Tag): Tag {
-        var tagName = ""
-        if(invoker.typeId != TagList<Tag>().typeId) tagName = stream.readTagName()
+    override fun deserialize(stream: NBTInputStream): Tag {
         val tagValue = stream.readLong()
-        return TagLong(tagName, tagValue)
+        return TagLong("", tagValue)
     }
 }

@@ -13,16 +13,13 @@ class TagByte(
 
     override fun serialize(): ByteArray {
         return NBTOutputStream().apply {
-            writeTagInfo(this@TagByte)
             writeByte(tagValue.toInt())
         }.toByteArray()
     }
 
-    override fun deserialize(stream: NBTInputStream, invoker: Tag): Tag {
-        var tagName = ""
-        if(invoker.typeId != TagList<Tag>().typeId) tagName = stream.readTagName()
+    override fun deserialize(stream: NBTInputStream): Tag {
         val tagValue = stream.readByte()
-        return TagByte(tagName, tagValue)
+        return TagByte("", tagValue)
     }
 
 }

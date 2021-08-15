@@ -19,21 +19,18 @@ class TagList<T: Tag>(
             }
         }.toByteArray()
         return NBTOutputStream().apply {
-            writeTagInfo(this@TagList)
             if(tagValue.size == 0) writeTypeId(TagEnd().typeId) else writeTypeId(tagValue[0].typeId)
             writeInt(serializedList.size)
             write(serializedList)
         }.toByteArray()
     }
 
-    override fun deserialize(stream: NBTInputStream, invoker: Tag): Tag {
-        var tagName = ""
-        if(invoker.typeId != TagList<Tag>().typeId) tagName = stream.readTagName()
+    override fun deserialize(stream: NBTInputStream): Tag {
         val listType = getTagById(stream.readTypeId())
-        val tagList = TagList<Tag>(tagName)
+        val tagList = TagList<Tag>("")
         val size = stream.readInt()
         for(i in 0..size) {
-            val newTag = listType.deserialize(stream, this)
+            val newTag = listType.deserialize(stream)
             tagList.addTag(newTag)
         }
         return tagList

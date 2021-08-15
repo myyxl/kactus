@@ -4,10 +4,10 @@ import nbt.stream.NBTInputStream
 
 abstract class Tag(
     open val typeId: Int,
-    val name: String,
+    var name: String,
     val value: Any) {
     abstract fun serialize(): ByteArray
-    abstract fun deserialize(stream: NBTInputStream, invoker: Tag): Tag
+    abstract fun deserialize(stream: NBTInputStream): Tag
 
     companion object {
         private val tagList = listOf<Tag>(
