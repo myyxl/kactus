@@ -5,15 +5,15 @@ import nbt.stream.NBTOutputStream
 
 class TagDouble(
     tagName: String,
-    private val tagValue: Double,
+    override val value: Double,
     override val typeId: Int = 6
-) : Tag(typeId, tagName, tagValue) {
+) : Tag(typeId, tagName, value) {
 
     constructor(): this("", 0.0)
 
     override fun serialize(): ByteArray {
         return NBTOutputStream().apply {
-            writeDouble(tagValue)
+            writeDouble(value)
         }.toByteArray()
     }
 

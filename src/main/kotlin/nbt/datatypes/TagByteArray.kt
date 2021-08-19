@@ -5,16 +5,16 @@ import nbt.stream.NBTOutputStream
 
 class TagByteArray(
     tagName: String,
-    private val tagValue: ByteArray,
+    override val value: ByteArray,
     override val typeId: Int = 7
-) : Tag(typeId, tagName, tagValue) {
+) : Tag(typeId, tagName, value) {
 
     constructor(): this("", ByteArray(0))
 
     override fun serialize(): ByteArray {
         return NBTOutputStream().apply {
-            writeInt(tagValue.size)
-            write(tagValue)
+            writeInt(value.size)
+            write(value)
         }.toByteArray()
     }
 
