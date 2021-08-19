@@ -5,7 +5,7 @@ import nbt.stream.NBTInputStream
 abstract class Tag(
     open val typeId: Int,
     var name: String,
-    val value: Any) {
+    open val value: Any) {
     abstract fun serialize(): ByteArray
     abstract fun deserialize(stream: NBTInputStream): Tag
 

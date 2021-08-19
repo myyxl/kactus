@@ -16,17 +16,12 @@ class NBT(private val compressionMethod: NBTCompression) {
     constructor(): this(NBTCompression.NONE)
 
     fun writeToFile(fileName: String, tagCompound: TagCompound) {
-        val dataBytes = NBTOutputStream().apply {
-            writeTagInfo(tagCompound)
-            write(tagCompound.serialize())
-        }.toByteArray()
-        val outFile = File(fileName)
-        outFile.writeBytes(compressByteArray(dataBytes))
+        File(fileName).writeBytes(serialize(tagCompound))
     }
 
     fun readFromFile(fileName: String): TagCompound {
         val fileBytes = File(fileName).readBytes()
-        return deserialize(decompressByteArray(fileBytes)) as TagCompound
+        return deserialize(fileBytes) as TagCompound
     }
 
     private fun compressByteArray(byteArray: ByteArray): ByteArray {
@@ -53,7 +48,7 @@ class NBT(private val compressionMethod: NBTCompression) {
     }
 
     fun deserialize(bytes: ByteArray): Tag {
-        val stream = NBTInputStream(ByteArrayInputStream(bytes))
+        val stream = NBTInputStream(ByteArrayInputStream(decompressByteArray(bytes)))
         val typeId = stream.readTypeId()
         val tagName = stream.readTagName()
         val tag = Tag.getTagById(typeId).deserialize(stream)
@@ -63,10 +58,10 @@ class NBT(private val compressionMethod: NBTCompression) {
     }
 
     fun serialize(tag: Tag): ByteArray {
-        return NBTOutputStream().apply {
+        return compressByteArray(NBTOutputStream().apply {
             writeTagInfo(tag)
             write(tag.serialize())
-        }.toByteArray()
+        }.toByteArray())
     }
 
     fun dump(tag: Tag, level: Int = -1) {

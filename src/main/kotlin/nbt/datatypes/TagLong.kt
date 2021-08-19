@@ -5,15 +5,15 @@ import nbt.stream.NBTOutputStream
 
 class TagLong(
     tagName: String,
-    private val tagValue: Long,
+    override val value: Long,
     override val typeId: Int = 4
-) : Tag(typeId, tagName, tagValue) {
+) : Tag(typeId, tagName, value) {
 
     constructor(): this("", 0)
 
     override fun serialize(): ByteArray {
         return NBTOutputStream().apply {
-            writeLong(tagValue)
+            writeLong(value)
         }.toByteArray()
     }
 
