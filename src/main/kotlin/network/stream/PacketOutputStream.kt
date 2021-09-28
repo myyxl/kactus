@@ -1,6 +1,5 @@
 package network.stream
 
-import minecraft.world.Location
 import java.io.DataOutputStream
 import java.io.OutputStream
 import java.util.*
@@ -45,9 +44,9 @@ class PacketOutputStream(out: OutputStream?) : DataOutputStream(out) {
     /*
         https://wiki.vg/Protocol#Position
      */
-    fun writePosition(location: Location) {
+    /*fun writePosition(location: Location) {
         val loc: Long = ((location.x and 0x3FFFFFF shl 38 or (location.z and 0x3FFFFFF shl 12) or (location.y and 0xFFF)).toLong())
         writeLong(loc)
-    }
+    }*/
 
 }

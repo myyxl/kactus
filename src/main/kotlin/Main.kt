@@ -1,6 +1,6 @@
-import network.Server
+import minecraft.MinecraftServer
 
 fun main() {
-    val server = Server("0.0.0.0", 25565)
-    server.start()
+    val minecraftServer = MinecraftServer()
+    minecraftServer.start()
 }
