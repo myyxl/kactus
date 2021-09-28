@@ -8,8 +8,10 @@ import nbt.stream.NBTOutputStream
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.util.zip.Deflater
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
+import java.util.zip.Inflater
 
 class NBT(private val compressionMethod: NBTCompression) {
 
@@ -33,6 +35,15 @@ class NBT(private val compressionMethod: NBTCompression) {
                 }
                 out.toByteArray()
             }
+            NBTCompression.ZLIB -> {
+                val deflater = Deflater().apply {
+                    setInput(byteArray)
+                    finish()
+                }
+                val out = ByteArray(deflater.bytesWritten.toInt())
+                deflater.deflate(out)
+                out
+            }
             else -> byteArray
         }
     }
@@ -42,6 +53,21 @@ class NBT(private val compressionMethod: NBTCompression) {
             NBTCompression.GZIP -> {
                 val input = ByteArrayInputStream(byteArray)
                 GZIPInputStream(input).readAllBytes()
+            }
+            NBTCompression.ZLIB -> {
+                val inflater = Inflater()
+                val out = ByteArrayOutputStream()
+                out.use {
+                    val buffer = ByteArray(1024)
+                    inflater.setInput(byteArray)
+                    var count = -1
+                    while (count != 0) {
+                        count = inflater.inflate(buffer)
+                        it.write(buffer, 0, count)
+                    }
+                    inflater.end()
+                }
+                out.toByteArray()
             }
             else -> byteArray
         }
