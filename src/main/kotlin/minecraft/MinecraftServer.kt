@@ -1,36 +1,38 @@
 package minecraft
 
+import io.netty.channel.Channel
 import minecraft.player.Player
 import minecraft.world.LevelLoader
-import network.Server
-import network.client.ClientConnection
-import network.client.ClientState
-import network.packet.server.login.SLoginSuccessPacket
+import network.server.NetworkServer
+import network.server.ClientState
+import network.server.outbound.packet.login.OutboundLoginSuccessPacket
+import network.server.sendPacket
+import network.server.setState
 
-class MinecraftServer : Thread() {
+class MinecraftServer {
 
     val serverMotd = "I'm a Kotlin server"
     val gameVersion = "1.17.1"
     val protocolVersion = 756
     val maxPlayers = 100
 
-    private val tcpServer = Server("0.0.0.0", 25565, this)
+    private lateinit var networkServer: NetworkServer
 
     @Volatile var isRunning = true
     @Volatile var onlinePlayers = ArrayList<Player>()
 
-    override fun run() {
+    fun startServer() {
         LevelLoader().loadLevels()
-        tcpServer.start()
+        networkServer = NetworkServer("0.0.0.0", 25565, this)
         while(isRunning) {
             // TODO
         }
     }
 
-    @Synchronized fun initializeNewPlayer(clientConnection: ClientConnection, username: String) {
-        val newPlayer = Player(username, clientConnection)
-        clientConnection.sendPacket(SLoginSuccessPacket(username, newPlayer.uuid))
-        clientConnection.clientState = ClientState.PLAY
+    @Synchronized fun initializeNewPlayer(channel: Channel, username: String) {
+        val newPlayer = Player(username, channel)
+        channel.sendPacket(OutboundLoginSuccessPacket(username, newPlayer.uuid))
+        channel.config().setState(ClientState.PLAY)
         onlinePlayers.add(newPlayer)
     }
 
@@ -38,11 +40,11 @@ class MinecraftServer : Thread() {
         onlinePlayers.remove(player)
     }
 
-    @Synchronized fun removeOnlinePlayer(clientConnection: ClientConnection) {
+    @Synchronized fun removeOnlinePlayer(channel: Channel) {
         val iter = onlinePlayers.iterator()
         while(iter.hasNext()) {
             val player = iter.next()
-            if(player.clientConnection == clientConnection) iter.remove()
+            if(player.channel == channel) iter.remove()
         }
     }
 }

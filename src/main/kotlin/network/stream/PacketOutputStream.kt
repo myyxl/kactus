@@ -1,11 +1,10 @@
 package network.stream
 
-import java.io.DataOutputStream
-import java.io.OutputStream
+import io.netty.buffer.ByteBuf
 import java.util.*
 import kotlin.experimental.or
 
-class PacketOutputStream(out: OutputStream?) : DataOutputStream(out) {
+class PacketOutputStream(val byteBuf: ByteBuf) {
 
     /*
         writeVarInt() and writeVarLong() source: https://wiki.vg/Protocol#VarInt_and_VarLong
@@ -17,7 +16,7 @@ class PacketOutputStream(out: OutputStream?) : DataOutputStream(out) {
             var currentByte = (value and 127).toByte()
             value = value ushr 7
             if (value != 0) currentByte = currentByte or 128.toByte()
-            writeByte(currentByte.toInt())
+            byteBuf.writeByte(currentByte.toInt())
         } while (value != 0)
     }
 
@@ -27,18 +26,18 @@ class PacketOutputStream(out: OutputStream?) : DataOutputStream(out) {
             var currentByte = (value and 127).toByte()
             value = value ushr 7
             if (value != 0L) currentByte = currentByte or 128.toByte()
-            writeByte(currentByte.toInt())
+            byteBuf.writeByte(currentByte.toInt())
         } while (value != 0L)
     }
 
     fun writeString(string: String) {
         writeVarInt(string.toByteArray().size)
-        writeBytes(string)
+        byteBuf.writeBytes(string.toByteArray())
     }
 
     fun writeUUID(uuid: UUID) {
-        writeLong(uuid.mostSignificantBits)
-        writeLong(uuid.leastSignificantBits)
+        byteBuf.writeLong(uuid.mostSignificantBits)
+        byteBuf.writeLong(uuid.leastSignificantBits)
     }
 
     /*

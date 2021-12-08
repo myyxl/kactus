@@ -13,8 +13,13 @@ repositories {
 }
 
 dependencies {
-    implementation("org.junit.jupiter:junit-jupiter:5.7.0")
+    // Testing
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation(kotlin("test"))
+
+    //Server dependencies
+    implementation("io.netty:netty-all:4.1.68.Final")
+    implementation("org.reflections:reflections:0.9.12")
 }
 
 tasks.test {

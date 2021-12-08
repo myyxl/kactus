@@ -1,8 +1,8 @@
 package minecraft.player
 
-import network.client.ClientConnection
+import io.netty.channel.Channel
 import java.util.*
 
-class Player(val username: String, val clientConnection: ClientConnection) {
+class Player(val username: String, val channel: Channel) {
     val uuid: UUID = UUID.randomUUID()
 }
